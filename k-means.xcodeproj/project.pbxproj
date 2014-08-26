@@ -8,23 +8,35 @@
 
 /* Begin PBXBuildFile section */
 		7D15B84119AA89DA00EA970A /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 7D15B84019AA89DA00EA970A /* main.c */; };
+		7D15B84819AA89F800EA970A /* km.c in Sources */ = {isa = PBXBuildFile; fileRef = 7D15B84719AA89F800EA970A /* km.c */; };
+		7D15B84B19AA97DC00EA970A /* input-2.csv in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7D15B84A19AA925E00EA970A /* input-2.csv */; };
+		7D15B84E19AAA19200EA970A /* km_textfile.c in Sources */ = {isa = PBXBuildFile; fileRef = 7D15B84D19AAA19200EA970A /* km_textfile.c */; };
+		7D3AC93B19ACDF8B00C92679 /* km_error.c in Sources */ = {isa = PBXBuildFile; fileRef = 7D3AC93A19ACDF8B00C92679 /* km_error.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		7D15B83B19AA89DA00EA970A /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 16;
 			files = (
+				7D15B84B19AA97DC00EA970A /* input-2.csv in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7D15B83D19AA89DA00EA970A /* k-means */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "k-means"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D15B84019AA89DA00EA970A /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		7D15B84719AA89F800EA970A /* km.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = km.c; sourceTree = "<group>"; };
+		7D15B84919AA8A1300EA970A /* km.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = km.h; sourceTree = "<group>"; };
+		7D15B84A19AA925E00EA970A /* input-2.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = "input-2.csv"; sourceTree = "<group>"; };
+		7D15B84C19AAA17E00EA970A /* km_textfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = km_textfile.h; sourceTree = "<group>"; };
+		7D15B84D19AAA19200EA970A /* km_textfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = km_textfile.c; sourceTree = "<group>"; };
+		7D15B84F19AAA20000EA970A /* km_error.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = km_error.h; sourceTree = "<group>"; };
+		7D3AC93A19ACDF8B00C92679 /* km_error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = km_error.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +69,14 @@
 		7D15B83F19AA89DA00EA970A /* k-means */ = {
 			isa = PBXGroup;
 			children = (
+				7D15B84A19AA925E00EA970A /* input-2.csv */,
 				7D15B84019AA89DA00EA970A /* main.c */,
+				7D15B84919AA8A1300EA970A /* km.h */,
+				7D15B84719AA89F800EA970A /* km.c */,
+				7D15B84F19AAA20000EA970A /* km_error.h */,
+				7D3AC93A19ACDF8B00C92679 /* km_error.c */,
+				7D15B84C19AAA17E00EA970A /* km_textfile.h */,
+				7D15B84D19AAA19200EA970A /* km_textfile.c */,
 			);
 			path = "k-means";
 			sourceTree = "<group>";
@@ -118,6 +137,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D3AC93B19ACDF8B00C92679 /* km_error.c in Sources */,
+				7D15B84819AA89F800EA970A /* km.c in Sources */,
+				7D15B84E19AAA19200EA970A /* km_textfile.c in Sources */,
 				7D15B84119AA89DA00EA970A /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,6 +254,7 @@
 				7D15B84619AA89DA00EA970A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
