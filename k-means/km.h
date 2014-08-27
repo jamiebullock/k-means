@@ -15,6 +15,7 @@
 
 typedef struct km_point_ *km_point;
 typedef struct km_point_ **km_pointlist;
+#define RETURN_ON_ERROR(func) { km_error error__ = (func); if (error__ != km_NoError) return error__; }
 
 km_pointlist km_pointlist_new(uint64_t num_points);
 km_error km_pointlist_fill(km_pointlist pointlist, km_textfile textfile);

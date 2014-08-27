@@ -10,8 +10,6 @@
 
 #include <stdio.h>
 
-#define RETURN_ON_ERROR(func) if ((func) != km_NoError) return 1;
-
 int main(int argc, const char * argv[])
 {
 
