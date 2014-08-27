@@ -170,7 +170,7 @@ km_error km_textfile_next_line(km_textfile textfile, char **line)
         return error;
     }
     
-    uint64_t line_length = new_offset - initial_offset; // includes '\n' or EOF (this ultima
+    uint64_t line_length = new_offset - initial_offset; // includes '\n' or EOF
     
     if (line_length != (int32_t)line_length)
     {
