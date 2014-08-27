@@ -18,22 +18,17 @@ struct km_point_
     float y;
 };
 
+struct km_pointlist_
+{
+    struct km_point_ *points;
+    uint64_t num_points;
+};
+
 // 1. Read the data from file into N km_point structs
 // 2. Compute the distance of each point from each of M cluster centres
 // 3. Re-compute cluster centres
 // 4. Repeat 2–3 until the total error is minimised
 // 5. Write output points to file
-
-km_point km_point_new(void)
-{
-    return malloc(sizeof(struct km_point_));
-}
-
-
-void km_point_delete(km_point point)
-{
-    free(point);
-}
 
 km_error km_point_init(km_point point, uint32_t id, float x, float y)
 {
@@ -47,7 +42,16 @@ km_error km_point_init(km_point point, uint32_t id, float x, float y)
 
 km_pointlist km_pointlist_new(uint64_t num_points)
 {
-    return malloc(num_points * sizeof(struct km_point_ *));
+    km_pointlist pointlist = malloc(sizeof(struct km_pointlist_));
+    pointlist->num_points = num_points;
+    pointlist->points = malloc(num_points * sizeof(struct km_point_));
+    return pointlist;
+}
+
+void km_pointlist_delete(km_pointlist pointlist)
+{
+    free(pointlist->points);
+    free(pointlist);
 }
 
 km_error km_pointlist_fill(km_pointlist pointlist, km_textfile textfile)
@@ -63,9 +67,7 @@ km_error km_pointlist_fill(km_pointlist pointlist, km_textfile textfile)
     {
         sscanf(line, "%g,%g", &x, &y);
         free(line);
-        km_point point = km_point_new();
-        km_point_init(point, 0, x, y);
-        pointlist[count++] = point;
+        km_point_init(&pointlist->points[count++], 0, x, y);
         line = NULL;
     }
     
