@@ -69,10 +69,10 @@ km_error km_pointlist_fill(km_pointlist pointlist, km_textfile textfile)
         line = NULL;
     }
     
-//    for (int i = 0; i < km_textfile_num_lines(textfile); ++i )
-//    {
-//        printf("%f, %f\n", pointlist[i]->x, pointlist[i]->y);
-//    }
+    for (int i = 0; i < km_textfile_num_lines(textfile); ++i )
+    {
+        printf("%f, %f\n", pointlist->points[i].x, pointlist->points[i].y);
+    }
 
     return error;
 }
