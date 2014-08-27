@@ -6,6 +6,9 @@
 //  Copyright (c) 2014 Jamie Bullock. All rights reserved.
 //
 
+#ifndef KM_H
+#define KM_H
+
 #include "km_textfile.h"
 
 #include <stdint.h>
@@ -18,3 +21,4 @@ km_error km_pointlist_fill(km_pointlist pointlist, km_textfile textfile);
 
 
 
+#endif // #ifndef KM_H
