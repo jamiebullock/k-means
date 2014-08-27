@@ -76,6 +76,11 @@ km_error km_pointlist_fill(km_pointlist pointlist, km_textfile textfile)
         printf("%f, %f\n", pointlist->points[i].x, pointlist->points[i].y);
     }
 
+    if (error == km_FileEndError) // Don't propogate km_FileEndError as we expect it
+    {
+        return km_NoError;
+    }
+    
     return error;
 }
 
