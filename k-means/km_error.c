@@ -31,6 +31,8 @@ const char *km_error_to_string(km_error error)
             return "unspecified error";
         case km_MemoryAllocationError:
             return "memory allocation error";
+        case km_IndexOutOfBoundsError:
+            return "index out of bounds error";
         default:
             fprintf(stderr, "an unhandled error was generated");
             abort();
