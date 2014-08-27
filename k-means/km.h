@@ -23,5 +23,6 @@ km_pointlist km_pointlist_new(uint64_t num_points);
 void km_pointlist_delete(km_pointlist pointlist);
 km_error km_pointlist_fill(km_pointlist pointlist, km_textfile textfile);
 uint64_t km_pointlist_num_points(km_pointlist pointlist);
+km_error km_pointlist_update(km_pointlist pointlist, uint64_t index, uint32_t id, float x, float y);
 
 #endif // #ifndef KM_H

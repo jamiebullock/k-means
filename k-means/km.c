@@ -89,3 +89,16 @@ uint64_t km_pointlist_num_points(km_pointlist pointlist)
     return pointlist->num_points;
 }
 
+km_error km_pointlist_update(km_pointlist pointlist, uint64_t index, uint32_t id, float x, float y)
+{
+    if (index >= pointlist->num_points)
+    {
+        return km_IndexOutOfBoundsError;
+    }
+    pointlist->points[index].id = id;
+    pointlist->points[index].x = x;
+    pointlist->points[index].y = y;
+    
+    return km_NoError;
+}
+
