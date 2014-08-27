@@ -23,6 +23,7 @@ int main(int argc, const char * argv[])
     RETURN_ON_ERROR(km_pointlist_fill(pointlist, textfile));
 
         
+    km_pointlist_delete(pointlist);
     km_textfile_delete(textfile);
     
     
