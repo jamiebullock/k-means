@@ -187,21 +187,22 @@ km_error km_textfile_next_line(km_textfile textfile, char **line)
     
     ++line_length; // add 1 char for '\0'
     *line = malloc(line_length);
+    char *line_ = *line;
     
-    if (*line== NULL)
+    if (line_ == NULL)
     {
         perror("error");
         return km_MemoryAllocationError;
     }
     
-    char *rv = fgets(*line, (int32_t)line_length, textfile->fp); // leave line_length as is because fgets() reads "at most one less than the number of characters specified by size"
-    *line[strcspn(*line, "\n")] = '\0'; // Replace newline with '\0'
+    char *rv = fgets(line_, (int32_t)line_length, textfile->fp); // leave line_length as is because fgets() reads "at most one less than the number of characters specified by size"
+    line_[strcspn(line_, "\n")] = '\0'; // Replace newline with '\0'
     
     if (rv == NULL)
     {
         if (ferror(textfile->fp))
         {
-            *line= NULL; // "If an error occurs, they return NULL and the buffer contents are indeterminate" so we don't free *line
+            line_ = NULL; // "If an error occurs, they return NULL and the buffer contents are indeterminate" so we don't free *line
             return km_FileReadError;
         }
         assert(!feof(textfile->fp)); // The way this function is designed reading past EOF should be impossible
