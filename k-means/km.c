@@ -77,3 +77,8 @@ km_error km_pointlist_fill(km_pointlist pointlist, km_textfile textfile)
     return error;
 }
 
+uint64_t km_pointlist_num_points(km_pointlist pointlist)
+{
+    return pointlist->num_points;
+}
+
