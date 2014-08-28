@@ -1,6 +1,6 @@
 # Declaration of variables
 CC = gcc
-CC_FLAGS = -w  -D_LARGEFILE_SOURCE -D_POSIX_SOURCE -std=c99 -Wall -Wextra  -O0 -g -DDEBUG # -O3 -DNDEBUG
+CC_FLAGS = -w  -D_LARGEFILE_SOURCE -D_POSIX_SOURCE -std=c99 -Wall -Wextra -O3 -DNDEBUG # -O0 -g -DDEBUG # -O3 -DNDEBUG
 LD_FLAGS = -lm
 
 # File names
