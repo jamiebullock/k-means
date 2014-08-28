@@ -12,29 +12,24 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-enum cluster_id {
+typedef enum cluster_id
+{
     Adam,
     Bob,
     Charley,
     David,
     Edward,
     km_num_cluster_ids_
-};
+}
+cluster_id;
 
 
 int distance_comparison_function(const void * a, const void * b)
 {
     return (((km_point)a)->distance - ((km_point)b)->distance);
 }
-
-
-// 1. Read the data from file into N km_point structs
-// 2. Compute the distance of each point from each of M cluster centres
-// 3. Re-compute cluster centres
-// 4. Repeat 2–3 until the total error is minimised
-// 5. Write output points to file
-
 
 void set_initial_cluster_centroids(km_pointlist pointlist)
 {
@@ -43,6 +38,25 @@ void set_initial_cluster_centroids(km_pointlist pointlist)
     km_pointlist_update(pointlist, 2, Charley, 2.674, -0.001);
     km_pointlist_update(pointlist, 3, David, 1.044, -1.251);
     km_pointlist_update(pointlist, 4, Edward, -1.495, -0.090);
+}
+
+char *cluster_name_from_id(cluster_id id)
+{
+    switch (id) {
+        case Adam:
+            return "Adam";
+        case Bob:
+            return "Bob";
+        case Charley:
+            return "Charley";
+        case David:
+            return "David";
+        case Edward:
+            return "Edward";
+        default:
+            printf("error: unhandled cluster id: %d\n", id);
+            abort();
+    }
 }
 
 float euclidean_distance(km_point point1, km_point point2)
@@ -118,6 +132,16 @@ void adjust_centroids(km_pointlist pointlist, km_pointlist centroids)
     }
 }
 
+km_error write_cluster_names(km_textfile outfile, km_pointlist pointlist)
+{
+    for (km_pointlist_index index = 0; index < km_pointlist_num_points(pointlist); ++index)
+    {
+        km_point point = km_pointlist_point_at_index(pointlist, index);
+        char *cluster_name = cluster_name_from_id(point->id);
+        RETURN_ON_ERROR(km_textfile_write_line(outfile, cluster_name, strlen(cluster_name) + 1));
+    }
+    return km_NoError;
+}
 
 int main(void)
 {
@@ -153,7 +177,8 @@ int main(void)
 
     printf("writing output...\n");
     RETURN_ON_ERROR(km_textfile_write_line(outfile, line, 12));
-
+    RETURN_ON_ERROR(write_cluster_names(outfile, pointlist));
+    
     printf("cleaning up...\n");
     km_pointlist_delete(pointlist);
     km_pointlist_delete(centroids);
