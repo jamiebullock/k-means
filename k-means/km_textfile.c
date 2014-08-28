@@ -23,11 +23,6 @@ struct km_textfile_
 
 km_error km_textfile_seek_(km_textfile textfile, uint64_t offset)
 {
-    if (offset > textfile->num_bytes)
-    {
-        return km_FileSeekError;
-    }
-
     clearerr(textfile->fp);
     int error = 0;
 
@@ -96,7 +91,7 @@ km_error km_textfile_init(km_textfile textfile)
 
 km_error km_textfile_open(km_textfile textfile, const char *path)
 {
-    textfile->fp = fopen(path, "ab+");
+    textfile->fp = fopen(path, "r+");
 
     if (textfile->fp == NULL)
     {
@@ -104,10 +99,9 @@ km_error km_textfile_open(km_textfile textfile, const char *path)
         return km_FileReadError;
     }
 
+    km_textfile_rewind(textfile);
 
     int c = 0;
-
-    printf("reading file num lines\n");
 
     do
     {
@@ -119,9 +113,7 @@ km_error km_textfile_open(km_textfile textfile, const char *path)
     }
     while (c != EOF);
 
-    printf("resetting back to file start\n");
-
-    km_textfile_seek_(textfile, 0);
+    km_textfile_rewind(textfile);
 
     return km_NoError;
 }
@@ -182,22 +174,21 @@ km_error km_textfile_read_line(km_textfile textfile, char **line)
 
     ++line_length; // add 1 char for '\0'
     *line = (char *)malloc(line_length);
-    char *line_ = *line;
 
-    if (line_ == NULL)
+    if (*line == NULL)
     {
         perror("error");
         return km_MemoryAllocationError;
     }
 
-    char *rv = fgets(line_, (uint32_t)line_length, textfile->fp); // leave line_length as is because fgets() reads "at most one less than the number of characters specified by size"
-    line_[strcspn(line_, "\n")] = '\0'; // Replace newline with '\0'
+    char *rv = fgets(*line, (uint32_t)line_length, textfile->fp); // leave line_length as is because fgets() reads "at most one less than the number of characters specified by size"
+    (*line)[strcspn(*line, "\n")] = '\0'; // Replace newline with '\0'
 
     if (rv == NULL)
     {
         if (ferror(textfile->fp))
         {
-            line_ = NULL; // "If an error occurs, they return NULL and the buffer contents are indeterminate" so we don't free *line
+            *line = NULL; // "If an error occurs, they return NULL and the buffer contents are indeterminate" so we don't free *line
             return km_FileReadError;
         }
         assert(!feof(textfile->fp)); // The way this function is designed reading past EOF should be impossible
