@@ -91,8 +91,18 @@ km_error km_textfile_init(km_textfile textfile)
 
 km_error km_textfile_open(km_textfile textfile, const char *path)
 {
+    errno = 0;
+    
     textfile->fp = fopen(path, "r+");
-
+    
+    if (textfile->fp == NULL)
+    {
+        if (errno == ENOENT) // the file didn't exist, so create it
+        {
+            textfile->fp = fopen(path, "w+");
+        }
+    }
+    
     if (textfile->fp == NULL)
     {
         perror("error");
@@ -217,13 +227,13 @@ km_error km_textfile_write_chars_(km_textfile textfile, char *chars, size_t num_
 
 km_error km_textfile_write_line(km_textfile textfile, char *line, size_t num_chars)
 {
-    km_error error = km_textfile_write_chars_(textfile, line, num_chars);
+    km_error error = km_textfile_write_chars_(textfile, line, num_chars - 1); // don't include NULL char
 
     if (error != km_NoError)
     {
         return error;
     }
-
+    
     return km_textfile_write_chars_(textfile, (char *)"\n", 1);
 }
 
