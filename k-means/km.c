@@ -24,7 +24,7 @@ km_error km_point_init(km_point point, uint32_t id, float x, float y, float dist
     point->x = x;
     point->y = y;
     point->distance = distance;
-    
+
     return km_NoError;
 }
 
@@ -47,24 +47,24 @@ km_error km_pointlist_fill(km_pointlist pointlist, km_textfile textfile)
 {
     float x = 0.f;
     float y = 0.f;
-    
+
     char *line = NULL;
     km_error error = km_NoError;
     uint64_t count = 0L;
-    
-    while ((error = km_textfile_next_line(textfile, &line)) == km_NoError)
+
+    while ((error = km_textfile_read_line(textfile, &line)) == km_NoError)
     {
         sscanf(line, "%g,%g", &x, &y);
         free(line);
         km_point_init(&pointlist->points[count++], 0, x, y, 0);
         line = NULL;
     }
-    
+
     if (error == km_FileEndError) // Don't propogate km_FileEndError as we expect it
     {
         return km_NoError;
     }
-    
+
     return error;
 }
 
@@ -82,12 +82,24 @@ km_error km_pointlist_update(km_pointlist pointlist, uint64_t index, uint32_t id
     pointlist->points[index].id = id;
     pointlist->points[index].x = x;
     pointlist->points[index].y = y;
-    
+
     return km_NoError;
 }
 
 km_point km_pointlist_point_at_index(km_pointlist pointlist, km_pointlist_index index)
 {
     return &pointlist->points[index];
+}
+
+km_point km_pointlist_point_with_id(km_pointlist pointlist, km_point_id id)
+{
+    for (km_pointlist_index index = 0; index < pointlist->num_points; ++index)
+    {
+        if (pointlist->points[index].id == id)
+        {
+            return &pointlist->points[index];
+        }
+    }
+    return NULL;
 }
 
