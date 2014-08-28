@@ -17,9 +17,10 @@ typedef enum km_error_
     km_FileSeekError,           // 3
     km_FileTellError,           // 4
     km_FileEndError,            // 5
-    km_MemoryAllocationError,   // 6
-    km_IndexOutOfBoundsError,   // 7
-    km_UnspecifiedError         // 8
+    km_FileWriteError,          // 6
+    km_MemoryAllocationError,   // 7
+    km_IndexOutOfBoundsError,   // 8
+    km_UnspecifiedError         // 9
 }
 km_error;
 

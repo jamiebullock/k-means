@@ -27,6 +27,8 @@ const char *km_error_to_string(km_error error)
             return "file tell error";
         case km_FileEndError:
             return "file end error";
+        case km_FileWriteError:
+            return "file write error";
         case km_UnspecifiedError:
             return "unspecified error";
         case km_MemoryAllocationError:
