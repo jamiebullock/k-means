@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <float.h>
 
 typedef enum cluster_id
 {
@@ -24,12 +25,6 @@ typedef enum cluster_id
     km_num_cluster_ids_
 }
 cluster_id;
-
-
-int distance_comparison_function(const void * a, const void * b)
-{
-    return (((km_point)a)->distance - ((km_point)b)->distance);
-}
 
 void set_initial_cluster_centroids(km_pointlist pointlist)
 {
@@ -61,7 +56,7 @@ char *cluster_name_from_id(cluster_id id)
 
 float euclidean_distance(km_point point1, km_point point2)
 {
-    return sqrtf(powf(point1->x - point2->x, 2) + powf(point1->y - point2->y, 2));
+    return powf(point1->x - point2->x, 2) + powf(point1->y - point2->y, 2);
 }
 
 void classify_point(km_pointlist centroids, km_point point)
@@ -76,14 +71,23 @@ void classify_point(km_pointlist centroids, km_point point)
         distances[index].id = centroid->id;
     }
 
-    qsort(distances, km_num_cluster_ids_, sizeof(struct km_point_), distance_comparison_function);
-
-    point->id = distances[0].id;
-    point->distance = distances[0].distance;
+    float min_distance = FLT_MAX;
+    km_pointlist_index min_index = 0;
+    
+    for (km_pointlist_index index = 0; index < km_pointlist_num_points(centroids); ++index)
+    {
+        if (distances[index].distance < min_distance)
+        {
+            min_distance = distances[index].distance;
+            min_index = index;
+        }
+    }
+    
+    point->id = distances[min_index].id;
+    point->distance = min_distance;
 }
 
-
-// Return the total error metric
+// Return the total error metric as function parameter
 void classify_points(km_pointlist pointlist, km_pointlist centroids, double *error)
 {
     *error = 0;
@@ -151,11 +155,9 @@ int main(void)
     double previous_error = 0.0;
     char line[128];
 
-    printf("opening files...\n");
     RETURN_ON_ERROR(km_textfile_open(csvfile, "input-2.csv"));
     RETURN_ON_ERROR(km_textfile_open(outfile, "OUTPUT.TXT"));
 
-    printf("filling point list...\n");
     km_pointlist pointlist = km_pointlist_new(km_textfile_num_lines(csvfile));
     km_pointlist centroids = km_pointlist_new(km_num_cluster_ids_);
 
@@ -164,28 +166,26 @@ int main(void)
     set_initial_cluster_centroids(centroids);
 
     printf("clustering...\n");
+    
     do
     {
         previous_error = error;
         classify_points(pointlist, centroids, &error);
         adjust_centroids(pointlist, centroids);
-        printf("error: %f\n", error);
     }
     while (error != previous_error);
 
+    printf("done!\n");
+    
     snprintf(line, 13, "error = %.3f", error);
 
-    printf("writing output...\n");
     RETURN_ON_ERROR(km_textfile_write_line(outfile, line, 12));
     RETURN_ON_ERROR(write_cluster_names(outfile, pointlist));
     
-    printf("cleaning up...\n");
     km_pointlist_delete(pointlist);
     km_pointlist_delete(centroids);
     km_textfile_delete(csvfile);
     km_textfile_delete(outfile);
-
-    printf("done!\n");
     
     return 0;
 }
