@@ -1,4 +1,4 @@
-//
+﻿//
 //  main.c
 //  k-means
 //
@@ -54,7 +54,7 @@ void classify_point(km_pointlist centroids, km_point point)
 {
     assert(km_pointlist_num_points(centroids) == km_num_cluster_ids_);
     struct km_point_ distances[km_num_cluster_ids_];
-    
+
     for (km_pointlist_index index = 0; index < km_pointlist_num_points(centroids); ++index)
     {
         km_point centroid = km_pointlist_point_at_index(centroids, index);
@@ -63,7 +63,7 @@ void classify_point(km_pointlist centroids, km_point point)
     }
 
     qsort(distances, km_num_cluster_ids_, sizeof(struct km_point_), distance_comparison_function);
-    
+
     point->id = distances[0].id;
     point->distance = distances[0].distance;
 }
@@ -73,39 +73,91 @@ void classify_point(km_pointlist centroids, km_point point)
 void classify_points(km_pointlist pointlist, km_pointlist centroids, double *error)
 {
     *error = 0;
-    
+
     for (km_pointlist_index index = 0; index < km_pointlist_num_points(pointlist); ++index)
     {
         km_point point = km_pointlist_point_at_index(pointlist, index);
         classify_point(centroids, point);
-        printf("%d, %f, %f, %f\n", point->id, point->x, point->y, point->distance);
         *error += point->distance;
     }
 }
 
-
-
-int main(int argc, const char * argv[])
+void adjust_centroids(km_pointlist pointlist, km_pointlist centroids)
 {
+    uint64_t num_centroids = km_pointlist_num_points(centroids);
+    uint32_t id_counts[num_centroids];
 
-    km_textfile textfile = km_textfile_new();
+    assert(num_centroids == km_num_cluster_ids_);
+
+    // 1. zero centroid locations and id counts
+    for (km_pointlist_index index = 0; index < num_centroids; ++index)
+    {
+        km_point centroid = km_pointlist_point_at_index(centroids, index);
+        centroid->x = 0.f;
+        centroid->y = 0.f;
+        id_counts[index] = 0;
+    }
+
+    // 2. accumulate x, y point positions and id counts in cluster
+    for (km_pointlist_index index = 0; index < km_pointlist_num_points(pointlist); ++index)
+    {
+        km_point point = km_pointlist_point_at_index(pointlist, index);
+        km_point centroid = km_pointlist_point_with_id(centroids, point->id);
+
+        centroid->x += point->x;
+        centroid->y += point->y;
+        id_counts[centroid->id]++;
+    }
+
+    // 3. divide by num points in cluster
+    for (km_pointlist_index index = 0; index < num_centroids; ++index)
+    {
+        km_point centroid = km_pointlist_point_at_index(centroids, index);
+        centroid->x /= id_counts[index];
+        centroid->y /= id_counts[index];
+    }
+}
+
+
+int main(void)
+{
+    km_textfile csvfile = km_textfile_new();
+    km_textfile outfile = km_textfile_new();
     double error = 0.0;
-    
-    RETURN_ON_ERROR(km_textfile_init(textfile));
-    RETURN_ON_ERROR(km_textfile_read(textfile, "input-2.csv"));
-    
-    km_pointlist pointlist = km_pointlist_new(km_textfile_num_lines(textfile));
+    double previous_error = 0.0;
+    char line[128];
+
+    printf("opening files...\n");
+    RETURN_ON_ERROR(km_textfile_open(csvfile, "input-2.csv"));
+    RETURN_ON_ERROR(km_textfile_open(outfile, "OUTPUT.TXT"));
+
+    printf("filling point list...\n");
+    km_pointlist pointlist = km_pointlist_new(km_textfile_num_lines(csvfile));
     km_pointlist centroids = km_pointlist_new(km_num_cluster_ids_);
-    
-    RETURN_ON_ERROR(km_pointlist_fill(pointlist, textfile));
-    
+
+    RETURN_ON_ERROR(km_pointlist_fill(pointlist, csvfile));
+
     set_initial_cluster_centroids(centroids);
-    classify_points(pointlist, centroids, &error);
-    
-    printf("total error: %f\n", error);
-    
+
+    printf("clustering...\n");
+    do
+    {
+        previous_error = error;
+        classify_points(pointlist, centroids, &error);
+        adjust_centroids(pointlist, centroids);
+        printf("error: %f\n", error);
+    }
+    while (error != previous_error);
+
+    snprintf(line, 13, "error = %.3f", error);
+
+    RETURN_ON_ERROR(km_textfile_write_line(outfile, line, 12));
+
     km_pointlist_delete(pointlist);
-    km_textfile_delete(textfile);
-    
+    km_pointlist_delete(centroids);
+    km_textfile_delete(csvfile);
+    km_textfile_delete(outfile);
+
     return 0;
 }
+
