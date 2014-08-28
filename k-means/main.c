@@ -1,4 +1,4 @@
-﻿//
+//
 //  main.c
 //  k-means
 //
@@ -151,13 +151,17 @@ int main(void)
 
     snprintf(line, 13, "error = %.3f", error);
 
+    printf("writing output...\n");
     RETURN_ON_ERROR(km_textfile_write_line(outfile, line, 12));
 
+    printf("cleaning up...\n");
     km_pointlist_delete(pointlist);
     km_pointlist_delete(centroids);
     km_textfile_delete(csvfile);
     km_textfile_delete(outfile);
 
+    printf("done!\n");
+    
     return 0;
 }
 
