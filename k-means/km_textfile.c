@@ -19,7 +19,6 @@ struct km_textfile_
 {
     FILE *fp;
     uint64_t num_lines;
-    uint64_t num_bytes;
 };
 
 km_error km_textfile_seek_(km_textfile textfile, uint64_t offset)
@@ -92,7 +91,6 @@ km_error km_textfile_init(km_textfile textfile)
 {
     textfile->fp = NULL;
     textfile->num_lines = 0L;
-    textfile->num_bytes = 0L;
     return km_NoError;
 }
 
@@ -106,18 +104,6 @@ km_error km_textfile_open(km_textfile textfile, const char *path)
         return km_FileReadError;
     }
 
-    printf("getting file descriptor\n");
-
-    int fd = fileno(textfile->fp); // According to the man page this "shouldn't fail"
-    struct stat data;
-    int rv = fstat(fd, &data);
-
-    if (rv != 0) {
-        perror("error");
-        return km_FileReadError;
-    }
-
-    textfile->num_bytes = data.st_size;
 
     int c = 0;
 
