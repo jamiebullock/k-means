@@ -6,13 +6,17 @@
 //  Copyright (c) 2014 Jamie Bullock. All rights reserved.
 //
 
-#ifndef KM_TEXTFILE_H
-#define KM_TEXTFILE_H
+#ifndef __k_means__km_textfile__
+#define __k_means__km_textfile__
 
 #include "km_error.h"
 
 #include <stdint.h>
 #include <stdlib.h>
+
+#ifdef __cplusplus
+extern “C” {
+#endif
 
 typedef struct km_textfile_ * km_textfile;
 
@@ -25,4 +29,8 @@ km_error km_textfile_write_line(km_textfile textfile, char *line, size_t num_cha
 uint64_t km_textfile_num_lines(km_textfile textfile);
 km_error km_textfile_rewind(km_textfile textfile);
 
-#endif // #ifndef KM_TEXTFILE_H
+#ifdef __cplusplus
+}
+#endif
+    
+#endif /* defined(__k_means__km_textfile__) */

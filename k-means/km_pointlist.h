@@ -1,30 +1,23 @@
 //
-//  km.h
-//  km
+//  km_pointlist.h
+//  k-means
 //
-//  Created by Jamie Bullock on 24/08/2014.
+//  Created by Jamie Bullock on 29/08/2014.
 //  Copyright (c) 2014 Jamie Bullock. All rights reserved.
 //
 
-#ifndef KM_H
-#define KM_H
+#ifndef __k_means__km_pointlist__
+#define __k_means__km_pointlist__
 
-#include "km_textfile.h"
 #include "km_error.h"
+#include "km_point.h"
+#include "km_textfile.h"
 
 #include <stdint.h>
 
-#define RETURN_ON_ERROR(func) { km_error error__ = (func); if (error__ != km_NoError) return error__; }
-
-typedef uint32_t km_point_id;
-
-typedef struct km_point_
-{
-    km_point_id id;
-    float distance;
-    float x;
-    float y;
-} * km_point;
+#ifdef __cplusplus
+extern “C” {
+#endif
 
 typedef struct km_pointlist_ * km_pointlist;
 typedef uint64_t km_pointlist_index;
@@ -37,5 +30,8 @@ km_error km_pointlist_update(km_pointlist pointlist, uint64_t index, uint32_t id
 km_point km_pointlist_point_at_index(km_pointlist pointlist, km_pointlist_index index);
 km_point km_pointlist_point_with_id(km_pointlist pointlist, km_point_id id);
 
-
-#endif // #ifndef KM_H
+#ifdef __cplusplus
+}
+#endif
+    
+#endif /* defined(__k_means__km_pointlist__) */

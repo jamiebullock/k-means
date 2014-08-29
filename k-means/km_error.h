@@ -6,9 +6,15 @@
 //  Copyright (c) 2014 Jamie Bullock. All rights reserved.
 //
 
-#ifndef KM_ERROR_H
-#define KM_ERROR_H
+#ifndef __k_means__km_error__
+#define __k_means__km_error__
 
+#define RETURN_ON_ERROR(func) { km_error error__ = (func); if (error__ != km_NoError) return error__; }
+
+#ifdef __cplusplus
+extern “C” {
+#endif
+    
 typedef enum km_error_
 {
     km_NoError,                 // 0
@@ -26,4 +32,8 @@ km_error;
 
 const char *km_error_to_string(km_error error);
 
-#endif // #ifndef KM_ERROR_H
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* defined(__k_means__km_error__) */

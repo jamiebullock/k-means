@@ -1,33 +1,23 @@
 //
-//  k-means.c
+//  km_pointlist.c
 //  k-means
 //
-//  Created by Jamie Bullock on 24/08/2014.
+//  Created by Jamie Bullock on 29/08/2014.
 //  Copyright (c) 2014 Jamie Bullock. All rights reserved.
 //
 
-#include "km.h"
+#include "km_pointlist.h"
+#include "km_point.h"
 
-#include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
-
+#include <stdio.h>
 
 struct km_pointlist_
 {
     struct km_point_ *points;
     km_pointlist_index num_points;
 };
-
-km_error km_point_init(km_point point, uint32_t id, float x, float y, float distance)
-{
-    point->id = id;
-    point->x = x;
-    point->y = y;
-    point->distance = distance;
-
-    return km_NoError;
-}
-
 
 km_pointlist km_pointlist_new(uint64_t num_points)
 {
@@ -47,11 +37,11 @@ km_error km_pointlist_fill(km_pointlist pointlist, km_textfile textfile)
 {
     float x = 0.f;
     float y = 0.f;
-
+    
     char *line = NULL;
     km_error error = km_NoError;
     uint64_t count = 0L;
-
+    
     while ((error = km_textfile_read_line(textfile, &line)) == km_NoError)
     {
         sscanf(line, "%g,%g", &x, &y);
@@ -59,12 +49,12 @@ km_error km_pointlist_fill(km_pointlist pointlist, km_textfile textfile)
         km_point_init(&pointlist->points[count++], 0, x, y, 0);
         line = NULL;
     }
-
+    
     if (error == km_FileEndError) // Don't propogate km_FileEndError as we expect it
     {
         return km_NoError;
     }
-
+    
     return error;
 }
 
@@ -82,7 +72,7 @@ km_error km_pointlist_update(km_pointlist pointlist, uint64_t index, uint32_t id
     pointlist->points[index].id = id;
     pointlist->points[index].x = x;
     pointlist->points[index].y = y;
-
+    
     return km_NoError;
 }
 
@@ -102,4 +92,3 @@ km_point km_pointlist_point_with_id(km_pointlist pointlist, km_point_id id)
     }
     return NULL;
 }
-
