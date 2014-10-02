@@ -2,6 +2,10 @@
 
 k-means is a simple C library for k-means clustering
 
+## Limitations
+
+This code currently assumes a 2-dimensional dataset scaled to the range -6..6. This will be revised in a future version.
+
 ## Portability 
 
 The code in this directory has been written to conform to the ANSI C99 standard.
@@ -24,7 +28,7 @@ To run the test program type `./km_test <infile.csv> <outfile.csv>` from a comma
 
 ## Optimisation
 
-The k-means algorithm has been implemented using Lloyd's algorithm. This differs slightly from the algorithm described at http://www.audioanalytic.com/en/64-codingexcersie in that the `SQRT` step is ommitted from the distance computation. This results in a minor performance improvement with no effect on the point classifications. However the overall error metric is slightly higher using sum-of-squares.
+The k-means algorithm has been implemented using [Lloyd's algorithm](http://en.wikipedia.org/wiki/Lloyd's_algorithm) with the SQRT step omitted from the distance computation for efficiency. 
 
 If further optimisation is required, a more efficient implementation such that proposed by Kanugo et al could be considered: http://www.cs.umd.edu/~mount/Projects/KMeans
 
