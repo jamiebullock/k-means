@@ -29,6 +29,9 @@ uint64_t km_pointlist_num_points(km_pointlist pointlist);
 km_error km_pointlist_update(km_pointlist pointlist, uint64_t index, uint32_t id, float x, float y);
 km_point km_pointlist_point_at_index(km_pointlist pointlist, km_pointlist_index index);
 km_point km_pointlist_point_with_id(km_pointlist pointlist, km_point_id id);
+void km_pointlist_randomise(km_pointlist pointlist);
+void km_pointlist_print_points(km_pointlist pointlist);
+
 
 #ifdef __cplusplus
 }

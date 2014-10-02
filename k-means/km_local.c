@@ -14,42 +14,32 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdint.h>
 
-void km_pointlist_set_initial_cluster_centroids(km_pointlist pointlist)
+/* Utility functions */
+uint32_t count_digits(uint32_t num)
 {
-    km_pointlist_update(pointlist, 0, Adam, -0.357, -0.253);
-    km_pointlist_update(pointlist, 1, Bob, -0.055, 4.392);
-    km_pointlist_update(pointlist, 2, Charley, 2.674, -0.001);
-    km_pointlist_update(pointlist, 3, David, 1.044, -1.251);
-    km_pointlist_update(pointlist, 4, Edward, -1.495, -0.090);
-}
-
-char *km_cluster_name_from_id_(km_cluster_id id)
-{
-    switch (id) {
-        case Adam:
-            return "Adam";
-        case Bob:
-            return "Bob";
-        case Charley:
-            return "Charley";
-        case David:
-            return "David";
-        case Edward:
-            return "Edward";
-        default:
-            printf("error: unhandled cluster id: %d\n", id);
-            abort();
+    uint32_t digits = 1;
+    
+    while (num > 9)
+    {
+        num /= 10;
+        digits++;
     }
+    return digits;
 }
+
 
 km_error km_textfile_write_cluster_names(km_textfile outfile, km_pointlist pointlist)
 {
     for (km_pointlist_index index = 0; index < km_pointlist_num_points(pointlist); ++index)
     {
         km_point point = km_pointlist_point_at_index(pointlist, index);
-        char *cluster_name = km_cluster_name_from_id_(point->id);
-        RETURN_ON_ERROR(km_textfile_write_line(outfile, cluster_name, strlen(cluster_name) + 1));
+        size_t id_buffer_size = count_digits(point->id) + 1;
+        char id_buffer[id_buffer_size];
+        snprintf(id_buffer, id_buffer_size, "%u", point->id);
+        
+        RETURN_ON_ERROR(km_textfile_write_line(outfile, id_buffer, id_buffer_size));
     }
     return km_NoError;
 }

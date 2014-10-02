@@ -27,10 +27,10 @@ float euclidean_distance_(km_point point1, km_point point2)
 
 void classify_point_(km_pointlist centroids, km_point point)
 {
-    assert(km_pointlist_num_points(centroids) == km_num_cluster_ids_);
-    struct km_point_ distances[km_num_cluster_ids_];
+    uint64_t num_centroids = km_pointlist_num_points(centroids);
+    struct km_point_ distances[num_centroids];
     
-    for (km_pointlist_index index = 0; index < km_pointlist_num_points(centroids); ++index)
+    for (km_pointlist_index index = 0; index < num_centroids; ++index)
     {
         km_point centroid = km_pointlist_point_at_index(centroids, index);
         distances[index].distance = euclidean_distance_(centroid, point);
@@ -40,7 +40,7 @@ void classify_point_(km_pointlist centroids, km_point point)
     float min_distance = FLT_MAX;
     km_pointlist_index min_index = 0;
     
-    for (km_pointlist_index index = 0; index < km_pointlist_num_points(centroids); ++index)
+    for (km_pointlist_index index = 0; index < num_centroids; ++index)
     {
         if (distances[index].distance < min_distance)
         {
@@ -70,9 +70,7 @@ void km_pointlist_adjust_centroids(km_pointlist pointlist, km_pointlist centroid
 {
     uint64_t num_centroids = km_pointlist_num_points(centroids);
     uint32_t id_counts[num_centroids];
-    
-    assert(num_centroids == km_num_cluster_ids_);
-    
+        
     // 1. zero centroid locations and id counts
     for (km_pointlist_index index = 0; index < num_centroids; ++index)
     {

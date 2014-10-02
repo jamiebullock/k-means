@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 
-int main(void)
+int main(int argc, const char *argv[])
 {
     km_textfile csvfile = km_textfile_new();
     km_textfile outfile = km_textfile_new();
@@ -21,15 +21,27 @@ int main(void)
     double previous_error = 0.0;
     char line[128];
 
-    RETURN_ON_ERROR(km_textfile_open(csvfile, "input-2.csv"));
-    RETURN_ON_ERROR(km_textfile_open(outfile, "OUTPUT.TXT"));
+    if (argc != 4)
+    {
+        fprintf(stderr, "usage: %s <num clusters> <infile.csv> <outfile.csv>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    uint8_t num_clusters = atoi(argv[1]);
+    const char *inpath = argv[2];
+    const char *outpath = argv[3];
+
+    fprintf(stdout, "Running %s with %d clusters...\n", argv[0]);
+    
+    RETURN_ON_ERROR(km_textfile_open(csvfile, inpath));
+    RETURN_ON_ERROR(km_textfile_open(outfile, outpath));
 
     km_pointlist pointlist = km_pointlist_new(km_textfile_num_lines(csvfile));
-    km_pointlist centroids = km_pointlist_new(km_num_cluster_ids_);
+    km_pointlist centroids = km_pointlist_new(num_clusters);
 
     RETURN_ON_ERROR(km_pointlist_fill(pointlist, csvfile));
 
-    km_pointlist_set_initial_cluster_centroids(centroids);
+    km_pointlist_randomise(centroids);
 
     printf("clustering...\n");
     
@@ -53,6 +65,6 @@ int main(void)
     km_textfile_delete(csvfile);
     km_textfile_delete(outfile);
     
-    return 0;
+    return EXIT_SUCCESS;
 }
 
