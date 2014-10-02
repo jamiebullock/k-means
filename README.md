@@ -24,7 +24,7 @@ To delete built files, type `make clean`.
 
 ## Running
 
-To run the test program type `./km_test <infile.csv> <outfile.csv>` from a command-line prompt, where `<infile.csv>` is the path to a CSV file containing N rows of equal length containing only floating point values and `<outfile.csv>` is the path where an output file will be written. The output file will contain N rows, each of which contains an integer representing the cluster id of the corresponding row in the input file.
+To run the test program type `./km_test <num clusters> <infile.csv> <outfile.csv>` from a command-line prompt, where <num clusters> is the number of clusters to partition the data into, `<infile.csv>` is the path to a CSV file containing N rows of equal length containing only floating point values and `<outfile.csv>` is the path to which an output file will be written. The output file will contain N rows, each of which contains an integer representing the cluster id of the corresponding row in the input file.
 
 ## Optimisation
 
